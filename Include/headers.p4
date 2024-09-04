@@ -7,6 +7,18 @@ header ethernet_t {
 }
 const bit<8> ETH_HEADER_LEN = 14;
 
+header ipv6_t {
+    bit<4>  version;
+    bit<8>  traffic_class;
+    bit<20> flow_label;
+    bit<16> len;
+    bit<8>  next_header;
+    bit<8>  hop_limit;
+    bit<128> src_addr;
+    bit<128> dst_addr;
+}
+const bit<8> IPV6_MIN_HEAD_LEN = 40;
+
 header ipv4_t {
     bit<4>  version;
     bit<4>  ihl;
@@ -23,8 +35,6 @@ header ipv4_t {
     bit<32> dst_addr;
 }
 const bit<8> IPV4_MIN_HEAD_LEN = 20;
-
-//header ipv6_t {}
 
 header tcp_t {
     bit<16> src_port;
@@ -51,6 +61,7 @@ const bit<8> UDP_HEADER_LEN = 8;
 struct headers_t {
     ethernet_t ethernet;
     ipv4_t ipv4;
+    ipv4_t ipv6;
     tcp_t tcp;
     udp_t udp;
 }
