@@ -5,6 +5,8 @@
                             in psa_egress_deparser_input_metadata_t edstd) {
     apply {
         packet.emit(hdr.ethernet);
+        packet.emit(hdr.v_ipv4);
+        packet.emit(hdr.v_ipv6);
         packet.emit(hdr.ipv4);
         packet.emit(hdr.ipv6);
         packet.emit(hdr.tcp);

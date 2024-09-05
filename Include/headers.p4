@@ -60,8 +60,10 @@ const bit<8> UDP_HEADER_LEN = 8;
 
 struct headers_t {
     ethernet_t ethernet;
+    ipv4_t v_ipv4;
+    ipv6_t v_ipv6;
     ipv4_t ipv4;
-    ipv4_t ipv6;
+    ipv6_t ipv6;
     tcp_t tcp;
     udp_t udp;
 }
