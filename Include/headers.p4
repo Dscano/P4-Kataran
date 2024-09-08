@@ -69,7 +69,8 @@ struct headers_t {
 }
 
 struct local_metadata_t {
-
+       bool isIPoIP;
+       bool noHit;
 }
 
 struct empty_metadata_t {

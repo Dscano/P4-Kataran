@@ -1,32 +1,43 @@
 #include <core.p4>
 #include <psa.p4>
 
-#include "Include/parser.p4"
-#include "Include/deparser.p4"
+#include "Include/parsers.p4"
+#include "Include/deparsers.p4"
+#include "Include/tables.p4"
 
 
-control Ingress(inout headers_t hdr, inout local_metadata_t local_metadata, in psa_ingress_input_metadata_t standard_metadata,
+control ingress(inout headers_t hdr, inout local_metadata_t local_metadata, in psa_ingress_input_metadata_t standard_metadata,
                 inout psa_ingress_output_metadata_t ostd) {
-        apply {
+   
+        Hash<bit<32>>(PSA_HashAlgorithm_t.CRC32) h;
 
+        apply {
+           if (local_metadata.isIPoIP){
+                table_ingress.apply(hdr,local_metadata, standard_metadata,ostd);
+                if(!local_metadata.noHit){
+                        if(hdr.v_ipv4.isValid()){
+                              h.get_hash({hdr.v_ipv4.dst_addr,hdr.v_ipv4.src_addr});
+                        }
+                        else{
+                              h.get_hash({hdr.v_ipv6.dst_addr,hdr.v_ipv6.src_addr});
+                        }
+                }     
+           }
         }
 }
 
-control Egress(inout headers_t hdr, inout local_metadata_t local_metadata, in psa_egress_input_metadata_t istd, 
-                inout psa_egress_output_metadata_t ostd) {
-        apply {
-
-        }
+control egress(inout headers_t hdr, inout local_metadata_t local_metadata, in psa_egress_input_metadata_t istd, 
+               inout psa_egress_output_metadata_t ostd) {
+        apply {}
 }
 
+IngressPipeline(parser_ingress(), 
+                ingress(), 
+                deparser()) IngressP;
 
-IngressPipeline(Parser(), 
-                Ingress(), 
-                Deparser()) IngressP;
-
-EgressPipeline(Parser(), 
-               Ingress(), 
-               Deparser()) EgressP;
+EgressPipeline(parser_egress(), 
+               egress(), 
+               deparser_egress()) EgressP;
 
 PSA_Switch(IngressP, 
            PacketReplicationEngine(),
