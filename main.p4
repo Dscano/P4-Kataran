@@ -13,15 +13,28 @@ control ingress(inout headers_t hdr, inout local_metadata_t local_metadata, in p
 
         apply {
            if (local_metadata.isIPoIP){
+        
+                //For an incoming packet toward a VIP - katran is checking if it saw packet from the same 
+                //session before, and if it has - it sends the packet to the same real 
+                //(actual server/l7 lb which then processes/terminates the TCP session).
                 table_ingress.apply(hdr,local_metadata, standard_metadata,ostd);
+
+                //Outer packet destination not matched 
                 if(!local_metadata.noHit){
+                
+                //If it's a new session - from 5 tuples in the packet, calculate a hash value.
                         if(hdr.v_ipv4.isValid()){
                               h.get_hash({hdr.v_ipv4.dst_addr,hdr.v_ipv4.src_addr});
                         }
+
                         else{
                               h.get_hash({hdr.v_ipv6.dst_addr,hdr.v_ipv6.src_addr});
                         }
-                }     
+                }
+           }
+           else{
+        
+                table_ingress.apply(hdr,local_metadata, standard_metadata,ostd);
            }
         }
 }
