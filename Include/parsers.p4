@@ -24,6 +24,7 @@ parser parser_ingress(packet_in packet,
     state parse_v_ipv4 {
         packet.extract(hdr.v_ipv4);
         transition select(hdr.v_ipv4.protocol) {
+            0x01: parse_icmp;
             0x04: parse_ipv4;
             0x06: parse_tcp;
             0x11: parse_udp;
@@ -37,6 +38,7 @@ parser parser_ingress(packet_in packet,
             0x04: parse_ipv6;
             0x06: parse_tcp;
             0x11: parse_udp;
+            0x3a: parse_icmp;
             default: accept;
         }
     }
@@ -45,6 +47,7 @@ parser parser_ingress(packet_in packet,
         packet.extract(hdr.ipv4);
         local_metadata.isIPoIP = true;
         transition select(hdr.ipv4.protocol) {
+            0x01: parse_icmp;
             0x06: parse_tcp;
             0x11: parse_udp;
             default: accept;
@@ -55,10 +58,16 @@ parser parser_ingress(packet_in packet,
         packet.extract(hdr.ipv6);
         local_metadata.isIPoIP = true;
         transition select(hdr.ipv6.next_header) {
+            0x3a: parse_icmp;
             0x06: parse_tcp;
             0x11: parse_udp;
             default: accept;
         }
+    }
+
+     state parse_icmp {
+        packet.extract(hdr.icmp);
+        transition accept;
     }
 
     state parse_tcp {
@@ -71,7 +80,6 @@ parser parser_ingress(packet_in packet,
         transition accept;
     }
 }
-
 
 
 parser parser_egress(packet_in packet, 

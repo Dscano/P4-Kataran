@@ -11,6 +11,7 @@
         packet.emit(hdr.v_ipv6);
         packet.emit(hdr.ipv4);
         packet.emit(hdr.ipv6);
+        packet.emit(hdr.icmp);
         packet.emit(hdr.tcp);
         packet.emit(hdr.udp);
     }

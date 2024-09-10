@@ -36,6 +36,13 @@ header ipv4_t {
 }
 const bit<8> IPV4_MIN_HEAD_LEN = 20;
 
+header icmp_t {
+    bit<8>  type;
+    bit<8>  code;
+    bit<16> hdr_checksum;
+}
+const bit<8> ICMP_MIN_HEAD_LEN = 8;
+
 header tcp_t {
     bit<16> src_port;
     bit<16> dst_port;
@@ -64,6 +71,7 @@ struct headers_t {
     ipv6_t v_ipv6;
     ipv4_t ipv4;
     ipv6_t ipv6;
+    icmp_t icmp;
     tcp_t tcp;
     udp_t udp;
 }
