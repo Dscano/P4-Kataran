@@ -30,6 +30,7 @@ control ingress(inout headers_t hdr, inout local_metadata_t local_metadata, in p
                         else{
                               h.get_hash({hdr.v_ipv6.dst_addr,hdr.v_ipv6.src_addr});
                         }
+                        table_forward_encap.apply(hdr,local_metadata, standard_metadata,ostd);
                 }
            }
            else{
