@@ -9,7 +9,7 @@
 control ingress(inout headers_t hdr, inout local_metadata_t local_metadata, in psa_ingress_input_metadata_t standard_metadata,
                 inout psa_ingress_output_metadata_t ostd) {
    
-        Hash<bit<32>>(PSA_HashAlgorithm_t.CRC32) h;
+        //Hash<bit<32>>(PSA_HashAlgorithm_t.CRC32) h;
 
         apply {
            if (local_metadata.isIPoIP){
@@ -23,19 +23,19 @@ control ingress(inout headers_t hdr, inout local_metadata_t local_metadata, in p
                 if(!local_metadata.noHit){
                 
                 //If it's a new session - from 5 tuples in the packet, calculate a hash value.
-                        if(hdr.v_ipv4.isValid()){
+                        /*if(hdr.v_ipv4.isValid()){
                               h.get_hash({hdr.v_ipv4.dst_addr,hdr.v_ipv4.src_addr});
                         }
 
                         else{
                               h.get_hash({hdr.v_ipv6.dst_addr,hdr.v_ipv6.src_addr});
-                        }
+                        }*/
                         table_forward_encap.apply(hdr,local_metadata, standard_metadata,ostd);
                 }
            }
            else{
         
-                table_ingress.apply(hdr,local_metadata, standard_metadata,ostd);
+                //table_ingress.apply(hdr,local_metadata, standard_metadata,ostd);
            }
         }
 }
