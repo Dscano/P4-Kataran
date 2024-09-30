@@ -60,7 +60,7 @@ parser parser_ingress(packet_in packet,
         transition select(hdr.ipv6.next_header) {
             0x3a: parse_icmp;
             0x06: parse_tcp;
-            0x11: parse_udp;
+            //0x11: parse_udp;
             default: accept;
         }
     }
@@ -75,10 +75,10 @@ parser parser_ingress(packet_in packet,
         transition accept;
     }
 
-    state parse_udp {
+    /*state parse_udp {
         packet.extract(hdr.udp);
         transition accept;
-    }
+    }*/
 }
 
 

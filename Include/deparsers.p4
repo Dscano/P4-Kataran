@@ -13,7 +13,7 @@
         packet.emit(hdr.ipv6);
         packet.emit(hdr.icmp);
         packet.emit(hdr.tcp);
-        packet.emit(hdr.udp);
+        //packet.emit(hdr.udp);
     }
 }
 
