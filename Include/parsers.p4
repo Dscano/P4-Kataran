@@ -75,10 +75,10 @@ parser parser_ingress(packet_in packet,
         transition accept;
     }
 
-    /*state parse_udp {
+    state parse_udp {
         packet.extract(hdr.udp);
         transition accept;
-    }*/
+    }
 }
 
 
