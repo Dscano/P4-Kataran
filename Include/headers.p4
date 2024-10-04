@@ -1,11 +1,11 @@
-
+#define DEFAULT_TTL 64
 
 header ethernet_t {
     bit<48> dst_addr;
     bit<48> src_addr;
     bit<16> ether_type;
 }
-const bit<8> ETH_HEADER_LEN = 14;
+const bit<16> ETH_HEADER_LEN = 14;
 
 header ipv6_t {
     bit<4>  version;
@@ -17,7 +17,7 @@ header ipv6_t {
     bit<128> src_addr;
     bit<128> dst_addr;
 }
-const bit<8> IPV6_MIN_HEAD_LEN = 40;
+const bit<16> IPV6_MIN_HEAD_LEN = 40;
 
 header ipv4_t {
     bit<4>  version;
@@ -33,14 +33,14 @@ header ipv4_t {
     bit<32> src_addr;
     bit<32> dst_addr;
 }
-const bit<8> IPV4_MIN_HEAD_LEN = 20;
+const bit<16> IPV4_MIN_HEAD_LEN = 20;
 
 header icmp_t {
     bit<8>  type;
     bit<8>  code;
     bit<16> hdr_checksum;
 }
-const bit<8> ICMP_MIN_HEAD_LEN = 8;
+const bit<16> ICMP_MIN_HEAD_LEN = 8;
 
 header tcp_t {
     bit<16> src_port;
@@ -62,7 +62,7 @@ header udp_t {
     bit<16> length;
     bit<16> checksum;
 }
-const bit<8> UDP_HEADER_LEN = 8;
+const bit<16> UDP_HEADER_LEN = 8;
 
 struct headers_t {
     ethernet_t ethernet;
@@ -76,8 +76,9 @@ struct headers_t {
 }
 
 struct local_metadata_t {
-       bool isIPoIP;
-       bool noHit;
+       bool     isIPoIP;
+       bool     noHit;
+       bit<16>  l4_src_port;
 }
 
 struct empty_metadata_t {

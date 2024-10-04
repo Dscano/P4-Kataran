@@ -1,11 +1,11 @@
 #include "headers.p4"
 
 
-parser parser_ingress(packet_in packet, 
-                      out headers_t hdr, 
-                      inout local_metadata_t local_metadata, 
-                      in psa_ingress_parser_input_metadata_t standard_metadata, 
-                      in empty_metadata_t resub_meta, 
+parser parser_ingress(packet_in packet,
+                      out headers_t hdr,
+                      inout local_metadata_t local_metadata,
+                      in psa_ingress_parser_input_metadata_t standard_metadata,
+                      in empty_metadata_t resub_meta,
                       in empty_metadata_t recirc_meta) {
 
     state start {
@@ -60,34 +60,36 @@ parser parser_ingress(packet_in packet,
         transition select(hdr.ipv6.next_header) {
             0x3a: parse_icmp;
             0x06: parse_tcp;
-            //0x11: parse_udp;
+            0x11: parse_udp;
             default: accept;
         }
     }
 
-     state parse_icmp {
+    state parse_icmp {
         packet.extract(hdr.icmp);
         transition accept;
     }
 
     state parse_tcp {
         packet.extract(hdr.tcp);
+        local_metadata.l4_src_port = hdr.tcp.src_port;
         transition accept;
     }
 
     state parse_udp {
         packet.extract(hdr.udp);
+        local_metadata.l4_src_port = hdr.udp.src_port;
         transition accept;
     }
 }
 
 
-parser parser_egress(packet_in packet, 
-                    out headers_t hdr, 
+parser parser_egress(packet_in packet,
+                    out headers_t hdr,
                     inout local_metadata_t local_metadata,
-                    in psa_egress_parser_input_metadata_t istd, 
-                    in empty_metadata_t normal_meta, 
-                    in empty_metadata_t clone_i2e_meta, 
+                    in psa_egress_parser_input_metadata_t istd,
+                    in empty_metadata_t normal_meta,
+                    in empty_metadata_t clone_i2e_meta,
                     in empty_metadata_t clone_e2e_meta) {
     state start {
         transition accept;
