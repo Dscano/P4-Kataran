@@ -30,8 +30,6 @@ control table_ingress(inout headers_t hdr,
      }
 }
 
-
-
 control table_forward_encap(inout headers_t hdr,
                           inout local_metadata_t local_metadata,
                           in psa_ingress_input_metadata_t standard_metadata,
