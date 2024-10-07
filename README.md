@@ -4,7 +4,7 @@
 p4c-ebpf --arch psa -o OUTPUT.c test.p4
 
 ```
-TODO specify difference between with and without '''--xdp'''
+TODO specify difference between with and without **--xdp**
 
 ## Compilation
 
@@ -15,6 +15,8 @@ make -f backends/ebpf/runtime/kernel.mk BPFOBJ=out.o P4FILE=<P4-PROGRAM>.p4 P4C=
 ```
 
 You can also perform compilation step by step:
+
+TODO at the moment is not working fine, investigate.
 
 ```
 $ p4c-ebpf --arch psa --target kernel -o out.c main.p4
@@ -44,3 +46,30 @@ $ nikss-ctl add-port pipe <PIPELINE-ID> dev <INTF>
 '''
 
 Note you migth need to use '''sudo'''
+
+## Troubleshooting
+
+The PSA implementation for eBPF backend generates standard BPF objects that can be inspected using bpftool.
+
+To troubleshoot PSA-eBPF program you will probably need bpftool. Follow the steps below to install it.
+
+You should be able to see bpftool help:
+
+```
+$ bpftool help
+  Usage: bpftool [OPTIONS] OBJECT { COMMAND | help }
+         bpftool batch file FILE
+         bpftool version
+
+         OBJECT := { prog | map | link | cgroup | perf | net | feature | btf | gen | struct_ops | iter }
+         OPTIONS := { {-j|--json} [{-p|--pretty}] | {-f|--bpffs} |
+                      {-m|--mapcompat} | {-n|--nomount} }
+```
+
+You can install it via:
+```
+sudo apt install linux-tools-common
+```
+
+
+Refer to the [bpftool guide](https://manpages.ubuntu.com/manpages/focal/man8/bpftool-prog.8.html) for more examples how to use it.
